@@ -59,7 +59,7 @@ class BooklistController extends Controller
 
     public function author(Request $request)
     {
-        $title = "Library Author List";
+        $title = "Top 10 Most Famous Author";
 
         $authors = Author::withCount([
             'books as total_voters' => function ($query) {
