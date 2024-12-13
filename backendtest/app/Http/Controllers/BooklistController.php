@@ -12,7 +12,7 @@ class BooklistController extends Controller
 {
     public function index(Request $request)
     {
-        ini_set('max_execution_time', 120); 
+        ini_set('max_execution_time', 200); 
         $title = "Library Book List";
         $keyword = $request->query('keyword');
         $perPage = $request->query('perPage', 10); 
@@ -37,6 +37,9 @@ class BooklistController extends Controller
         $books = Book::with(['category', 'author', 'ratings'])
             ->select('id', 'book_name', 'category_id', 'author_id')
             ->where('book_name','like','%'. $keyword . '%')
+            ->orWhereHas('author', function ($query) use ($keyword) { 
+                $query->where('author_name', 'like', '%' . $keyword . '%');
+            })
             ->withCount('ratings')
             ->withAvg('ratings as average_rating', 'rating')
             // ->orderBy('author_id')
